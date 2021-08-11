@@ -7,12 +7,22 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class End {
     boolean playerWin;
+    boolean reset;
     BitmapFont font;
+
+    public boolean getReset() {
+        return reset;
+    }
+
+    public void setReset(boolean reset) {
+        this.reset = reset;
+    }
 
     public End(boolean playerWin) {
         this.playerWin = playerWin;
         font = new BitmapFont();
         font.setColor(0, 0, 0, 1);
+        reset = false;
     }
 
     public void render() {
@@ -25,7 +35,7 @@ public class End {
         }
         
         if(Gdx.input.isKeyJustPressed(Keys.R)) {
-            
+            reset = true;
         }
     }
 

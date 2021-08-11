@@ -44,6 +44,13 @@ public class Pong extends ApplicationAdapter {
 			}
 		} else if(screen.equals(Screen.END)) {
 			endScreen.render();
+			
+			if(endScreen.getReset()) {
+				screen = Screen.GAME;
+				endScreen.setReset(false);
+				gameScreen.reset();
+			}
+
 		}
 		batch.end();
 	}
