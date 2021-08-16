@@ -25,6 +25,8 @@ public class Game {
 	BitmapFont font;
 	float playerSpeed;
 	float enemySpeed;
+	int maxSpeed;
+	float ballSpeed;
 
 	public int playerScore;
 	public int enemyScore;
@@ -80,6 +82,8 @@ public class Game {
 
 		playerSpeed = 0;
 		enemyScore = 0;
+		maxSpeed = 500;
+		ballSpeed = 400;
 	}
     
     public void dispose() {
@@ -125,10 +129,10 @@ public class Game {
 	private void paddleLogic() {
 		//Player Logic
 		if(Gdx.input.isKeyPressed(Keys.W)) {
-			if(playerSpeed <= 355) playerSpeed += 50;
+			if(playerSpeed <= maxSpeed) playerSpeed += 50;
 			playerPos.y += playerSpeed * Gdx.graphics.getDeltaTime();
 		} else if(Gdx.input.isKeyPressed(Keys.S)) {
-			if(playerSpeed >= -355) playerSpeed -= 50;
+			if(playerSpeed >= -maxSpeed) playerSpeed -= 50;
 			playerPos.y += playerSpeed * Gdx.graphics.getDeltaTime();
 		} else {
 			playerSpeed = 0;
@@ -144,10 +148,10 @@ public class Game {
 
 		//Enemy Player Logic
 		if(Gdx.input.isKeyPressed(Keys.UP)) {
-			if(enemySpeed <= 355) enemySpeed += 50;
+			if(enemySpeed <= maxSpeed) enemySpeed += 50;
 			enemyPos.y += enemySpeed * Gdx.graphics.getDeltaTime();
 		} else if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-			if(enemySpeed >= -355) enemySpeed -= 50;
+			if(enemySpeed >= -maxSpeed) enemySpeed -= 50;
 			enemyPos.y += enemySpeed * Gdx.graphics.getDeltaTime();
 		} else {
 			enemySpeed = 0;
@@ -172,22 +176,26 @@ public class Game {
 		if(direction == -1) wallRight = true;
 		if(angle >= 0) wallUp = true;
 
-		ballPos.x += 400 * direction * Gdx.graphics.getDeltaTime();
+		ballPos.x += ballSpeed * direction * Gdx.graphics.getDeltaTime();
 		ballPos.y += angle * Gdx.graphics.getDeltaTime();
+
+		ballSpeed += 50 * Gdx.graphics.getDeltaTime();
 
 		if(ball.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
 			if(wallRight) {
 				direction *= -1;
-				angle += playerSpeed*2/3;
+				if(angle <= 300) angle += playerSpeed/3;
 				wallRight = !wallRight;
+				ballSpeed -= 40;
 			}
 		}
 		
 		if(ball.getBoundingRectangle().overlaps(enemy.getBoundingRectangle())) {
 			if(!wallRight) {
 				direction *= -1;
-				angle += enemySpeed*2/3;
+				if(angle <= 300) angle += enemySpeed/3;
 				wallRight = !wallRight;
+				ballSpeed -= 40;
 			}
 		}
 
@@ -195,6 +203,7 @@ public class Game {
 			if(wallUp) {
 				angle *= -1;
 				wallUp = !wallUp;
+				ballSpeed -= 40;
 			}
 		}
 
@@ -202,6 +211,7 @@ public class Game {
 			if(!wallUp) {
 				angle *= -1;
 				wallUp = !wallUp;
+				ballSpeed -= 40;
 			}
 		}
 
