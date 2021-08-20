@@ -83,7 +83,6 @@ public class Game {
 		playerSpeed = 0;
 		enemyScore = 0;
 		maxSpeed = 500;
-		ballSpeed = 400;
 	}
     
     public void dispose() {
@@ -107,7 +106,7 @@ public class Game {
 		ball.draw(Pong.batch);
 		player.draw(Pong.batch);
 		enemy.draw(Pong.batch);
-		font.draw(Pong.batch, playerScore + "    |    " + enemyScore, Pong.cam.viewportWidth/2, Pong.cam.viewportHeight-font.getCapHeight());
+		font.draw(Pong.batch, playerScore + "    |    " + enemyScore, Pong.cam.viewportWidth/2-26, Pong.cam.viewportHeight-font.getCapHeight());
 
 		if(isPaused && System.currentTimeMillis() - pTime >= 1000) {
 			isPaused = false;
@@ -171,6 +170,7 @@ public class Game {
 			direction = Math.round(Math.random()) == 1 ? 1 : -1;
 			angle = MathUtils.random(-150f, 150f);
 			isStart = false;
+			ballSpeed = 400;
 		}
 
 		if(direction == -1) wallRight = true;
@@ -179,7 +179,7 @@ public class Game {
 		ballPos.x += ballSpeed * direction * Gdx.graphics.getDeltaTime();
 		ballPos.y += angle * Gdx.graphics.getDeltaTime();
 
-		ballSpeed += 50 * Gdx.graphics.getDeltaTime();
+		ballSpeed += 40 * Gdx.graphics.getDeltaTime();
 
 		if(ball.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
 			if(wallRight) {

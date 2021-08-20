@@ -1,8 +1,11 @@
 package techno3d.pong;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class Pong extends ApplicationAdapter {
 	Game gameScreen;
@@ -11,6 +14,8 @@ public class Pong extends ApplicationAdapter {
 	boolean playerWin;
 	public static OrthographicCamera cam;
     public static SpriteBatch batch;
+	Texture background;
+	ShaderProgram shader;
 
 	
 	@Override
@@ -23,6 +28,12 @@ public class Pong extends ApplicationAdapter {
 		gameScreen = new Game();
 		endScreen = new End(playerWin);
 		playerWin = false;
+		background = new Texture(Gdx.files.internal("BG.png"));
+
+		ShaderProgram.pedantic = false;
+		shader = new ShaderProgram(Gdx.files.internal("shaders/redVert.glsl"), Gdx.files.internal("shaders/redFrag.glsl"));
+		System.out.println(shader.isCompiled() ? "yay" : shader.getLog());
+		batch.setShader(shader);
 	}
 
 
@@ -31,7 +42,12 @@ public class Pong extends ApplicationAdapter {
 	public void render() {
 		batch.setProjectionMatrix(cam.combined);
 		
+		shader.bind();
+		shader.setUniformf("u_width", cam.viewportWidth);
+
 		batch.begin();
+		batch.draw(background, 0, 0, cam.viewportWidth, cam.viewportHeight);
+
 		if (screen.equals(Screen.GAME)) {
 			gameScreen.render();
 			
@@ -61,6 +77,7 @@ public class Pong extends ApplicationAdapter {
 		gameScreen.dispose();
 		endScreen.dispose();
 		batch.dispose();
+		background.dispose();
 	}
 
 
